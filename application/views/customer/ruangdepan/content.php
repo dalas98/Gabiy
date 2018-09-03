@@ -118,15 +118,14 @@
 
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
-    <script type="text/javascript" src="http://rnd.lenna.id:3000/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://dev.lenna.id:3000/socket.io/socket.io.js"></script>
 
     <script>
       
-      var socket = io.connect("http://rnd.lenna.id:3000");
+      var socket = io.connect("https://dev.lenna.id:3000",{secure :true, port:3000,rejectUnauthorized:false});
 
             socket.on("device_event", function(data){
               // var base_url = window.location.origin;
-              // console.log(base_url);
               arr = JSON.parse(data);
               $.ajax({
                 url: base_url+"/customer/getstate/"+arr.deviceid,
@@ -152,10 +151,12 @@
 
         var x = $(elm);
 
+            var id = x.attr("id");
             var dataString = { 
               customer_id : b,
               device_id :a,
-              state : x.is(":checked")
+              state : x.is(":checked"),
+              socket_param : JSON.stringify({"customerid":b,"deviceid":id,"state": x.is(":checked"),pin:pin})
             };
 
             // var base_url = window.location.origin;
@@ -171,11 +172,9 @@
           }});
 
 
-        var id = x.attr("id");
-        var arr = {"customerid":b,"deviceid":id,"state": x.is(":checked"),pin:pin};
-
             //- socket.emit(id, x.is(":checked"));
-            socket.emit("device_event",JSON.stringify(arr));
+            // console.log(arr);
+            // socket.emit("device_event",JSON.stringify(arr));
 
 
 
